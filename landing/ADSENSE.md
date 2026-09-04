@@ -1,6 +1,6 @@
 # Configuración de Google AdSense
 
-La página contiene un conector global y tres ubicaciones preparadas para anuncios. Busca `ADSENSE:` en `index.html` para encontrarlas rápidamente.
+La página contiene un conector global y tres ubicaciones preparadas para anuncios. Busca `ADSENSE:` en `../index.html` para encontrarlas rápidamente.
 
 ## 1. Conector global
 
