@@ -1,6 +1,8 @@
 import json
 import os
 import time
+from html import unescape
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -242,24 +244,67 @@ def check_dian():
 
 
 def options_signature(options):
-    """Genera una firma estable sin asumir todavía la estructura de cada opción."""
+    """Genera una firma estable usando solo el ID y nombre de cada opción."""
+    extracted_options = extract_available_options(options)
+    if extracted_options:
+        return frozenset(extracted_options)
+
     return frozenset(
         json.dumps(option, sort_keys=True, ensure_ascii=False)
         for option in options
     )
 
 
+def extract_available_options(value):
+    """Extrae (id, nombre) desde la estructura anidada devuelta por DIAN."""
+    found = []
+
+    def visit(item):
+        if isinstance(item, dict):
+            name = item.get("Nombre")
+            option_id = next(
+                (
+                    item.get(key)
+                    for key in ("IdEspecialidad", "Id", "id", "value")
+                    if item.get(key) is not None
+                ),
+                None,
+            )
+            if name and option_id is not None:
+                clean_name = " ".join(unescape(str(name)).split())
+                found.append((str(option_id), clean_name))
+            else:
+                for nested_value in item.values():
+                    visit(nested_value)
+        elif isinstance(item, (list, tuple)):
+            for nested_item in item:
+                visit(nested_item)
+        elif isinstance(item, str):
+            try:
+                decoded = json.loads(item)
+            except (TypeError, ValueError):
+                return
+            visit(decoded)
+
+    visit(value)
+    return list(dict.fromkeys(found))
+
+
 def build_telegram_message(options):
-    options_text = json.dumps(options, indent=2, ensure_ascii=False)
-    max_options_length = 3000
-    if len(options_text) > max_options_length:
-        options_text = options_text[:max_options_length] + "\n..."
+    available_options = extract_available_options(options)
+    if available_options:
+        options_text = "\n".join(
+            f"• {name}\n  ID de opción: {option_id}"
+            for option_id, name in available_options
+        )
+    else:
+        options_text = "Se detectó disponibilidad. Consulta el portal oficial."
 
     return (
         "🚨 Citas DIAN disponibles\n\n"
         "Trámite: Devoluciones\n"
         "Modalidad: Atención Virtual\n\n"
-        "Opciones encontradas:\n"
+        f"Opciones encontradas ({len(available_options)}):\n"
         f"{options_text}\n\n"
         "Portal oficial:\n"
         "https://agendamiento.dian.gov.co/?recurso=CitasDIAN"
