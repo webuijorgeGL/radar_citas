@@ -1,6 +1,7 @@
 import json
 import os
 import time
+from datetime import datetime, timedelta
 from html import unescape
 
 import requests
@@ -12,7 +13,7 @@ VALIDATOR_URL = BASE_URL + "Player.aspx/ValidadorValidar"
 NO_AVAILABLE = "NO_AVAILABLE"
 AVAILABLE = "AVAILABLE"
 UNKNOWN = "UNKNOWN"
-CHECK_INTERVAL_SECONDS = 30 * 60
+CHECK_INTERVAL_SECONDS = 15 * 60
 
 
 def create_session():
@@ -348,8 +349,19 @@ def send_telegram_alert(options):
 def run_monitor(interval_seconds=CHECK_INTERVAL_SECONDS):
     previous_status = None
     previous_options = frozenset()
+    cycle_count = 0
 
     while True:
+        cycle_count += 1
+        cycle_started_at = datetime.now()
+        cycle_started_monotonic = time.monotonic()
+        print("\n" + "=" * 64)
+        print(
+            f"🔎 CONSULTA #{cycle_count} | "
+            f"{cycle_started_at.strftime('%d/%m/%Y %I:%M:%S %p')}"
+        )
+        print("=" * 64)
+
         status, options = check_dian()
         current_options = options_signature(options)
 
@@ -372,8 +384,20 @@ def run_monitor(interval_seconds=CHECK_INTERVAL_SECONDS):
             previous_status = status
             previous_options = current_options
 
-        print(f"Próxima consulta en {interval_seconds // 60} minutos.")
-        time.sleep(interval_seconds)
+        elapsed_seconds = time.monotonic() - cycle_started_monotonic
+        sleep_seconds = max(0, interval_seconds - elapsed_seconds)
+        next_run = datetime.now() + timedelta(seconds=sleep_seconds)
+
+        print("-" * 64)
+        print(
+            f"✅ Consulta #{cycle_count} terminada en "
+            f"{elapsed_seconds:.1f} segundos | Estado: {status}"
+        )
+        print(
+            f"⏰ Próxima consulta: {next_run.strftime('%d/%m/%Y %I:%M:%S %p')} "
+            f"(en {sleep_seconds / 60:.1f} minutos)"
+        )
+        time.sleep(sleep_seconds)
 
 
 if __name__ == "__main__":
