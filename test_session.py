@@ -3,6 +3,7 @@ import os
 import time
 from datetime import datetime, timedelta
 from html import unescape
+from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup
@@ -13,7 +14,30 @@ VALIDATOR_URL = BASE_URL + "Player.aspx/ValidadorValidar"
 NO_AVAILABLE = "NO_AVAILABLE"
 AVAILABLE = "AVAILABLE"
 UNKNOWN = "UNKNOWN"
-CHECK_INTERVAL_SECONDS = 15 * 60
+CHECK_INTERVAL_SECONDS = 10 * 60
+
+
+def load_local_env():
+    """Carga las credenciales locales sin sobrescribir variables ya definidas."""
+    env_file = Path(__file__).resolve().with_name(".env")
+    if not env_file.is_file():
+        return
+
+    for raw_line in env_file.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        if key not in ("TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID"):
+            continue
+        value = value.strip().strip('"\'')
+        if value:
+            os.environ.setdefault(key, value)
+
+
+def telegram_is_configured():
+    return bool(os.environ.get("TELEGRAM_BOT_TOKEN") and os.environ.get("TELEGRAM_CHAT_ID"))
 
 
 def create_session():
@@ -317,7 +341,7 @@ def send_telegram_alert(options):
     token = os.environ.get("TELEGRAM_BOT_TOKEN")
     chat_id = os.environ.get("TELEGRAM_CHAT_ID")
     if not token or not chat_id:
-        print("⚠️ Telegram no está configurado en las variables de entorno.")
+        print("⚠️ Telegram no está configurado. Revisa el archivo .env.")
         return False
 
     try:
@@ -401,6 +425,10 @@ def run_monitor(interval_seconds=CHECK_INTERVAL_SECONDS):
 
 
 if __name__ == "__main__":
+    load_local_env()
+    if not telegram_is_configured():
+        raise SystemExit("Falta TELEGRAM_BOT_TOKEN o TELEGRAM_CHAT_ID en .env. Monitor no iniciado.")
+    print("✅ Telegram configurado (credenciales ocultas).")
     try:
         run_monitor()
     except KeyboardInterrupt:
