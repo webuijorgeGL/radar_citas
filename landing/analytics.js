@@ -27,6 +27,17 @@
     }
   });
 
+  document.querySelectorAll(".faq-list details").forEach(function (item) {
+    item.addEventListener("toggle", function () {
+      if (item.open) {
+        track("faq_open", {
+          question_id: item.id,
+          page_path: window.location.pathname,
+        });
+      }
+    });
+  });
+
   var reachedDepths = {};
   window.addEventListener("scroll", function () {
     var scrollable = document.documentElement.scrollHeight - window.innerHeight;
