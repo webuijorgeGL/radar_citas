@@ -137,20 +137,8 @@ a {
   width: 100%;
 }
 
-.ad-placeholder {
-  display: grid;
-  min-height: 110px;
-  padding: 16px;
-  place-items: center;
-  border: 1px dashed #b7c5be;
-  border-radius: 12px;
-  color: #7f8c86;
-  background: #f7f9f8;
-  font-size: 0.78rem;
-}
-
-.ad-container--multiplex .ad-placeholder {
-  min-height: 280px;
+.ad-unit {
+  width: 100%;
 }
 
 .hero {
@@ -664,14 +652,6 @@ code {
   .ad-placement {
     width: calc(100% - 24px);
     margin-block: 34px;
-  }
-
-  .ad-placeholder {
-    min-height: 100px;
-  }
-
-  .ad-container--multiplex .ad-placeholder {
-    min-height: 240px;
   }
 
   .final-cta {
