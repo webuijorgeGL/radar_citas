@@ -331,6 +331,11 @@ def build_telegram_message(options):
         "Modalidad: Atención Virtual\n\n"
         f"Opciones encontradas ({len(available_options)}):\n"
         f"{options_text}\n\n"
+        "⚠️ Desde octubre de 2026, si la cita corresponde a la devolución "
+        "del IVA de un vehículo eléctrico o híbrido, no habrá videollamada. "
+        "Agenda normalmente y envía los documentos al buzón de la seccional "
+        "el día y hora reservados.\n"
+        "Guía: https://www.radardecitas.com/devolucion-iva.html#cambio-atencion-octubre\n\n"
         "Portal oficial:\n"
         "https://agendamiento.dian.gov.co/?recurso=CitasDIAN"
     )
