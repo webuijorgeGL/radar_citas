@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Herramientas para organizar la solicitud de devolución del IVA de vehículos eléctricos o híbridos: checklist, asunto de correo y buzones DIAN.">
+  <meta name="theme-color" content="#006b4f">
+  <title>Herramientas para preparar la devolución de IVA | Radar Citas DIAN</title>
+  <link rel="canonical" href="https://radardecitas.com/herramientas.html">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-G70GDC91C2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-G70GDC91C2');</script>
+  <link rel="stylesheet" href="landing/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html"><img src="landing/assets/radar-citas-dian.png" alt="Radar Citas DIAN" width="56" height="56"><span>Radar Citas DIAN</span></a>
+    <nav class="main-nav" aria-label="Navegación principal"><a class="nav-link" href="index.html">Inicio</a><a class="nav-link" href="devolucion-iva.html">Devolución IVA</a><a class="nav-link" href="documentos-devolucion.html">Documentos</a><a class="nav-link nav-link--active" href="herramientas.html">Herramientas</a><a class="nav-link" href="certificado-upme.html">Certificado UPME</a><a class="nav-link" href="acerca.html">Acerca</a></nav>
+  </header>
+  <main><article class="article-shell">
+    <header class="article-hero"><p class="eyebrow">Preparación en tu navegador</p><h1>Organiza tu solicitud antes de la cita</h1><p>Marca documentos, construye el asunto del correo y localiza el buzón publicado para tu Dirección Seccional. Estas herramientas no presentan la solicitud ni envían información a la DIAN.</p></header>
+
+    <section class="privacy-note"><strong>Privacidad de la herramienta:</strong> el nombre, NIT y fecha que escribas se procesan únicamente en tu navegador. No se incluyen en los eventos de Analytics ni se envían a Radar de Citas. El avance del checklist se guarda localmente en este dispositivo.</section>
+
+    <section class="tool-panel" aria-labelledby="checklist-title">
+      <div class="tool-heading"><div><p class="eyebrow">Herramienta 1</p><h2 id="checklist-title">Checklist de documentos</h2></div><button class="secondary-button" type="button" id="reset-checklist">Reiniciar</button></div>
+      <p>La lista corresponde a una persona natural que solicita el IVA pagado por un vehículo certificado por la UPME. Tu caso puede requerir anexos adicionales.</p>
+      <div class="checklist-progress" aria-live="polite"><span id="checklist-count">0 de 7 documentos marcados</span><progress id="checklist-progress" max="7" value="0">0 de 7</progress></div>
+      <div class="interactive-checklist" id="document-checklist">
+        <label><input type="checkbox" data-check="formato-010"><span><strong>001 — Formato 010</strong> diligenciado y firmado.</span></label>
+        <label><input type="checkbox" data-check="certificacion-bancaria"><span><strong>002 — Certificación bancaria</strong> de cuenta activa del solicitante, expedida hace no más de un mes.</span></label>
+        <label><input type="checkbox" data-check="certificacion-upme"><span><strong>003 — Certificación UPME</strong> correspondiente al vehículo solicitado.</span></label>
+        <label><input type="checkbox" data-check="factura"><span><strong>004 — Factura electrónica</strong> con identificación, vehículo e IVA pagado legibles.</span></label>
+        <label><input type="checkbox" data-check="relacion-facturas"><span><strong>005 — Relación de facturas</strong> con los datos exigidos para el solicitante.</span></label>
+        <label><input type="checkbox" data-check="declaracion"><span><strong>006 — Declaración juramentada o certificaciones</strong> sobre devolución previa y tratamiento del IVA, según corresponda.</span></label>
+        <label><input type="checkbox" data-check="poder"><span><strong>007 — Poder o autorización</strong> cuando actúe un apoderado o existan copropietarios.</span></label>
+      </div>
+      <p class="tool-help"><a href="documentos-devolucion.html#recomendaciones-dian">Consultar recomendaciones y casos prácticos</a></p>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="subject-title">
+      <p class="eyebrow">Herramienta 2</p><h2 id="subject-title">Generador del asunto del correo</h2>
+      <p>Completa los campos tal como aparecen en tu RUT. Antes de enviar, compara el resultado con las instrucciones que muestre la DIAN para tu cita.</p>
+      <form id="subject-form" class="tool-form">
+        <label>Nombre o razón social<input id="subject-name" type="text" autocomplete="name" maxlength="120" placeholder="Ejemplo: María Pérez"></label>
+        <label>NIT o identificación<input id="subject-nit" type="text" inputmode="numeric" autocomplete="off" maxlength="20" placeholder="Sin puntos ni espacios"></label>
+        <label>Fecha de la cita<input id="subject-date" type="date"></label>
+        <button class="telegram-button" type="submit">Generar asunto</button>
+      </form>
+      <div class="generated-output" id="subject-result" hidden>
+        <p class="output-label">Asunto sugerido</p><output id="subject-output"></output>
+        <button class="secondary-button" id="copy-subject" type="button">Copiar asunto</button><span class="copy-status" id="copy-status" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <section class="tool-panel" aria-labelledby="mailbox-title">
+      <p class="eyebrow">Herramienta 3</p><h2 id="mailbox-title">Consulta el buzón de tu seccional</h2>
+      <p>Selecciona la Dirección Seccional que aparece en tu cita y corresponde a tu RUT. El directorio se transcribe del listado público de buzones para solicitudes de devolución con radicación manual.</p>
+      <label class="select-label" for="office-select">Dirección Seccional</label>
+      <select id="office-select"><option value="">Selecciona una seccional</option></select>
+      <div class="generated-output" id="mailbox-result" hidden><p class="output-label">Buzón publicado</p><a id="mailbox-link" href="#"></a><p id="mailbox-note"></p></div>
+      <div class="callout"><strong>Confirma antes de enviar:</strong> el directorio puede cambiar. Verifica el buzón en la confirmación de la cita o en el <a href="https://www.dian.gov.co/Prensa/Documents/Buzones_recepcion_solicitudes_devolucion_manual.pdf" target="_blank" rel="noopener noreferrer" data-analytics-event="official_source_click">documento oficial de la DIAN ↗</a>. Para Bogotá, distingue entre persona natural y persona jurídica.</div>
+    </section>
+
+    <section class="source-box"><h2>Qué hace y qué no hace esta página</h2><p>Ayuda a organizar información, pero no valida la procedencia del beneficio, no revisa documentos y no radica ante la DIAN. La aceptación depende de la administración tributaria. Consulta el <a href="devolucion-iva.html#cambio-atencion-octubre">procedimiento de envío desde octubre</a> y las instrucciones recibidas al agendar.</p></section>
+  </article></main>
+  <footer><p>Radar Citas DIAN — Proyecto informativo independiente.</p><nav class="footer-nav"><a href="index.html">Inicio</a><a href="acerca.html">Acerca del proyecto</a><a href="privacidad.html">Privacidad</a><a href="https://t.me/radarCitasDian" target="_blank" rel="noopener noreferrer">Canal de Telegram ↗</a></nav></footer>
+  <script src="landing/analytics.js" defer></script><script src="landing/herramientas.js" defer></script>
+</body>
+</html>
