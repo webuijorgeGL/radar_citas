@@ -2,7 +2,7 @@ import json
 import os
 import time
 from datetime import datetime, timedelta
-from html import unescape
+from html import escape, unescape
 from pathlib import Path
 
 import requests
@@ -319,7 +319,7 @@ def build_telegram_message(options):
     available_options = extract_available_options(options)
     if available_options:
         options_text = "\n".join(
-            f"• {name}\n  ID de opción: {option_id}"
+            f"• {escape(name)}\n  ID de opción: {escape(option_id)}"
             for option_id, name in available_options
         )
     else:
@@ -331,13 +331,13 @@ def build_telegram_message(options):
         "Modalidad: Atención Virtual\n\n"
         f"Opciones encontradas ({len(available_options)}):\n"
         f"{options_text}\n\n"
-        "⚠️ Desde octubre de 2026, si la cita corresponde a la devolución "
-        "del IVA de un vehículo eléctrico o híbrido, no habrá videollamada. "
-        "Agenda normalmente y envía los documentos al buzón de la seccional "
-        "el día y hora reservados.\n"
-        "Guía: https://www.radardecitas.com/devolucion-iva.html#cambio-atencion-octubre\n\n"
         "Portal oficial:\n"
-        "https://agendamiento.dian.gov.co/?recurso=CitasDIAN"
+        "https://agendamiento.dian.gov.co/?recurso=CitasDIAN\n\n"
+        "<b>Utilidades DIAN:</b>\n"
+        "• Checklist de documentación\n"
+        "• Generador de asunto del correo\n"
+        "• Busca el e-mail de tu seccional y más\n"
+        "https://radardecitas.com/herramientas.html"
     )
 
 
@@ -355,6 +355,7 @@ def send_telegram_alert(options):
             json={
                 "chat_id": chat_id,
                 "text": build_telegram_message(options),
+                "parse_mode": "HTML",
                 "disable_web_page_preview": True,
             },
             timeout=20,
