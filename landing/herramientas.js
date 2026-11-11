@@ -93,17 +93,39 @@
     ["Valledupar", "dsia_valledupar_devoluciones@dian.gov.co"], ["Villavicencio", "dsia_villavicencio_devoluciones@dian.gov.co"],
     ["Yopal", "dsia_yopal_devoluciones@dian.gov.co"]
   ];
+  var appointmentOffices = new Set([
+    "Bogotá — persona natural",
+    "Bogotá — persona jurídica",
+    "Bucaramanga",
+    "Cali",
+    "Medellín"
+  ]);
   var select = document.getElementById("office-select");
-  offices.forEach(function (office) {
-    var option = document.createElement("option"); option.value = office[1]; option.textContent = office[0]; select.appendChild(option);
+  offices.forEach(function (office, index) {
+    var option = document.createElement("option"); option.value = String(index); option.textContent = office[0]; select.appendChild(option);
   });
   select.addEventListener("change", function () {
     var result = document.getElementById("mailbox-result");
     if (!select.value) { result.hidden = true; return; }
+    var office = offices[Number(select.value)];
+    var requiresAppointment = appointmentOffices.has(office[0]);
+    var label = document.getElementById("mailbox-result-label");
     var link = document.getElementById("mailbox-link");
-    link.href = "mailto:" + select.value; link.textContent = select.value;
-    document.getElementById("mailbox-note").textContent = "Verifica esta dirección en las instrucciones vigentes antes de enviar documentos.";
+    var note = document.getElementById("mailbox-note");
+    if (requiresAppointment) {
+      label.textContent = "Esta seccional requiere cita";
+      link.hidden = true;
+      link.removeAttribute("href");
+      link.textContent = "";
+      note.textContent = "Agenda el trámite específico para vehículos eléctricos o híbridos. La DIAN enviará al correo registrado en tu RUT el buzón y el momento exacto para remitir los documentos. No uses anticipadamente el buzón general de devoluciones.";
+    } else {
+      label.textContent = "Buzón de devolución manual";
+      link.hidden = false;
+      link.href = "mailto:" + office[1];
+      link.textContent = office[1];
+      note.textContent = "Para esta seccional, la DIAN indica que la solicitud de vehículos eléctricos o híbridos puede enviarse directamente al buzón publicado, desde el correo registrado en el RUT. Verifica el directorio oficial antes de enviar.";
+    }
     result.hidden = false;
-    emit("sectional_mailbox_viewed");
+    emit("sectional_mailbox_viewed", { requires_appointment: requiresAppointment });
   });
 })();
